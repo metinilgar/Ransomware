@@ -1,4 +1,5 @@
 import socket
+import sys
 
 HOST = "127.0.0.1"  # Standard loopback interface address (localhost)
 PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
@@ -17,8 +18,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 if x == "enc":
                     while True:
                         data = conn.recv(1024)
-                        if not data:
-                            continue
+
                         with open("key.key", "wb") as key:
                             key.write(data)
                             break
@@ -37,8 +37,10 @@ ________  |  ______________
                      
                     """)
                 elif x == "close": break
-                elif x == "exit": break
+                elif x == "exit": 
+                    sys.exit("The server has been shut down.")
+                    break
                 else: print("Invalid command.")
-            if x == "exit":break
+
 
 

