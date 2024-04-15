@@ -29,7 +29,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                     print("""
 Commands  |  Descriptions
 ________  |  ______________                
-  enc     |  Encrypts files.
+  enc.     |  Encrypts files.
   dec     |  Decrypts files.
   close   |  Closes the client.
   exit    |  It shuts down both the client and the server.
